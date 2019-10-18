@@ -6,6 +6,7 @@ def random_search(f, numiter):
     y = rnd.uniform(*f.bound)
     best_x, best_y = x, y
     best = f([x, y])
+    print("Start Position: ", x, y, f([x, y]))
     for i in range(numiter):
         x = rnd.uniform(*f.bound)
         y = rnd.uniform(*f.bound)
@@ -24,5 +25,6 @@ def random_search(f, numiter):
 f = Ackley()
 x,y = random_search(f, 1000000)
 f.add_point([x,y])
-print(x,y, f([x,y]))
+print("Final Position: ", x, y, f([x, y]))
+print("Global Minimum: ", *f.glob_min)
 f.plot()

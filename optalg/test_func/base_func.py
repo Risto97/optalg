@@ -9,8 +9,10 @@ class Func:
         self.f = None
         self.bound = bound
         self.glob_min = glob_min
-        self.plot_points = []
         self.stride = 400
+        self.fig = plt.figure()
+        self.ax = plt.axes(projection='3d')
+        self.point_num = 0
 
     def __call__(self, x):
         return self.func(x)
@@ -24,29 +26,30 @@ class Func:
         X, Y = np.meshgrid(x, y)
         return X, Y
 
-    def plot(self):
+    def plot(self, text=False):
         X, Y = self.get_mesh(30)
         xy = np.stack([X, Y])
         Z = self.func(xy)
 
-        fig = plt.figure()
-        ax = plt.axes(projection='3d')
         # ax.contour3D(X, Y, Z, self.stride, cmap=cm.viridis)
-        ax.plot_wireframe(X, Y, Z, cmap='terrain')
         # ax.plot_surface(X, Y, Z, cmap='terrain')
-        ax.scatter(*self.glob_min, c='blue', s=30)
-        self.draw_points(ax)
+        self.ax.plot_wireframe(X, Y, Z, cmap='terrain')
+        self.ax.scatter(*self.glob_min, c='blue', s=30)
 
-        ax.set_xlabel('x')
-        ax.set_ylabel('y')
-        ax.set_zlabel('z')
+        self.ax.set_xlabel('x')
+        self.ax.set_ylabel('y')
+        self.ax.set_zlabel('z')
         plt.show()
 
-    def add_point(self, point):
+    def add_point(self, point, colour='red', size=30, text=False):
         point = [*point, self.func(point)]
-        self.plot_points.append(point)
+        self.point_num += 1
+        self.ax.scatter(*point, c=colour, s=size)
+        if text:
+            self.ax.text(*point, f"{self.point_num}")
 
-    def draw_points(self, plot):
+    def draw_points(self, plot, text=False):
         for i, point in enumerate(self.plot_points):
-            plot.scatter(*point, c='red', s=30)
-            plot.text(*point, f"{i}")
+            plot.scatter(point[0], point[1], point[2], c=point[3], s=30)
+            if text:
+                plot.text(*point, f"{i}")
