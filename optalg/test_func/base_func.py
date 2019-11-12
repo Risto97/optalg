@@ -13,6 +13,7 @@ class Func:
         self.fig = plt.figure()
         self.ax = plt.axes(projection='3d')
         self.point_num = 0
+        self.numpoints = 30
 
     def __call__(self, x):
         return self.func(x)
@@ -27,12 +28,12 @@ class Func:
         return X, Y
 
     def plot(self, text=False):
-        X, Y = self.get_mesh(30)
+        X, Y = self.get_mesh(self.numpoints)
         xy = np.stack([X, Y])
         Z = self.func(xy)
 
-        # ax.contour3D(X, Y, Z, self.stride, cmap=cm.viridis)
-        # ax.plot_surface(X, Y, Z, cmap='terrain')
+        # self.ax.contour3D(X, Y, Z, self.stride, cmap=cm.viridis)
+        # self.ax.plot_surface(X, Y, Z, cmap='terrain')
         self.ax.plot_wireframe(X, Y, Z, cmap='terrain')
         self.ax.scatter(*self.glob_min, c='blue', s=30)
 

@@ -24,6 +24,7 @@ def hill_climbing(f, numiter, eps):
 
 
 f = Shaffer()
+f.numpoints = 50
 x, y = hill_climbing(f, 1000000, 0.1)
 f.add_point([x, y], colour='red', text=True, size=60)
 print("Final Position: ", x, y, f([x, y]))

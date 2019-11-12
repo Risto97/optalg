@@ -23,7 +23,8 @@ def random_search(f, numiter):
     return best_x, best_y
 
 f = Ackley()
-x,y = random_search(f, 1000000)
+f.numpoints = 100
+x,y = random_search(f, 100000)
 f.add_point([x,y])
 print("Final Position: ", x, y, f([x, y]))
 print("Global Minimum: ", *f.glob_min)
