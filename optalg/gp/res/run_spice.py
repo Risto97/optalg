@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
+import logging
 import PySpice.Logging.Logging as Logging
-logger = Logging.setup_logging()
+logger = Logging.setup_logging(logging_level=logging.ERROR)
 
 from PySpice.Probe.Plot import plot
 from PySpice.Spice.Netlist import Circuit
@@ -15,8 +16,9 @@ seed = random.randrange(sys.maxsize)
 random.seed(seed)
 print("Seed was:", seed)
 
-res = 1312
-r = Res(set_res=res, res_vals=None, max_res=8, min_depth=1)
+res = 3.1415
+res_vals = None
+r = Res(set_res=res, res_vals=res_vals, max_res=8, min_res=2)
 r.search(npop=100, ngen=100)
 r.draw_best(fn="asd.pdf")
 
@@ -32,11 +34,10 @@ axe.grid()
 
 step_time = 10 @ u_ms
 for i in range(100):
-    print("I: ", i)
     circuit = Circuit(f"{i}")
     source = circuit.SinusoidalVoltageSource(
-        'input', 'in', circuit.gnd, amplitude=res @ u_V, frequency=1 @ u_Hz)
-    circuit.R(1, 'in', 'a', 0)
+        'input', 'in1', circuit.gnd, amplitude=res @ u_V, frequency=1 @ u_Hz)
+    circuit.R(1, 'in1', 'a', 0)
     circuit.R(2, circuit.gnd, 'b', 0)
 
     connect_network(r, circuit, tolerance=20)

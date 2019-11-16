@@ -11,8 +11,8 @@ class Res:
     def __init__(self,
                  set_res,
                  res_series='E24',
+                 min_res=0,
                  max_res=8,
-                 min_depth=0,
                  res_vals=None):
 
         self.set_res = set_res
@@ -20,7 +20,7 @@ class Res:
         self.res_vals = []
         self.max_res = max_res
         self.tree_depth = math.ceil(math.log2(self.max_res))
-        self.min_depth = min_depth
+        self.min_depth = math.floor(math.log2(min_res))
 
         self.pop = []
         self.hof = []
@@ -61,7 +61,7 @@ class Res:
             "expr_mut",
             gp.genFull,
             min_=self.min_depth,
-            max_=self.tree_depth - 1)
+            max_=self.tree_depth)
         self.tb.register(
             "mutate", gp.mutUniform, expr=self.tb.expr_mut, pset=self.pset)
 
