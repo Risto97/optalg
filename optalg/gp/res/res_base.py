@@ -8,12 +8,19 @@ import math
 
 
 class Res:
-    def __init__(self, set_res, res_series='E24', max_res=8, res_vals=None):
+    def __init__(self,
+                 set_res,
+                 res_series='E24',
+                 max_res=8,
+                 min_depth=0,
+                 res_vals=None):
+
         self.set_res = set_res
         self.res_series = res_series
         self.res_vals = []
         self.max_res = max_res
         self.tree_depth = math.ceil(math.log2(self.max_res))
+        self.min_depth = min_depth
 
         self.pop = []
         self.hof = []
@@ -39,7 +46,7 @@ class Res:
             "expr",
             gp.genHalfAndHalf,
             pset=self.pset,
-            min_=0,
+            min_=self.min_depth,
             max_=self.tree_depth)
         self.tb.register("individual", tools.initIterate, creator.Individual,
                          self.tb.expr)
@@ -51,7 +58,10 @@ class Res:
         self.tb.register("select", tools.selTournament, tournsize=3)
         self.tb.register("mate", gp.cxOnePoint)
         self.tb.register(
-            "expr_mut", gp.genFull, min_=0, max_=self.tree_depth - 1)
+            "expr_mut",
+            gp.genFull,
+            min_=self.min_depth,
+            max_=self.tree_depth - 1)
         self.tb.register(
             "mutate", gp.mutUniform, expr=self.tb.expr_mut, pset=self.pset)
 
