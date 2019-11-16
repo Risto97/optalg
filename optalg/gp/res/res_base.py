@@ -11,7 +11,7 @@ class Res:
     def __init__(self,
                  set_res,
                  res_series='E24',
-                 min_res=0,
+                 min_res=1,
                  max_res=8,
                  res_vals=None):
 
@@ -145,9 +145,12 @@ class Res:
         self.draw_ind(self.best, fn)
 
     def draw_ind(self, ind, fn="tree.pdf"):
+        res_val = self.tb.compile(expr=self.best)
+        rel_err = (res_val - self.set_res) * 100 / res_val
         nodes, edges, labels = gp.graph(self.best)
-
         g = pgv.AGraph(strict=False, overlap=False, splines=True, nodesep='.5')
+        g.node_attr['shape'] = 'box'
+        g.add_node(f'Target: {self.set_res}\nActual: {res_val}\nError: {str(round(rel_err,7))}%')
         g.node_attr['shape'] = 'ellipse'
         g.add_nodes_from(nodes)
         g.add_edges_from(edges)
